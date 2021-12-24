@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Access
+access_token.txt
+
