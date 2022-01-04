@@ -3,9 +3,9 @@
 #include <time.h>
 
 // array data
-char mainboard[10] = {'0' ,'1' ,'2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9'};
+char mainboard[10] = {'0' ,'1' ,'2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9'}; //define main board arrays
 
-char part1[10] = {'0' ,'1' ,'2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9'};
+char part1[10] = {'0' ,'1' ,'2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9'}; //defining arrays of the each square in the ultimate form
 char part2[10] = {'0' ,'1' ,'2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9'};
 char part3[10] = {'0' ,'1' ,'2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9'};
 char part4[10] = {'0' ,'1' ,'2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9'};
@@ -21,99 +21,124 @@ void board(char square[10]);
 int move(int choice ,char square[10] ,char mark);
 void moveUser(int boardSelect ,char mark ,int player);
 void moveAi();
+void reset();
+void change(char board[10]);
 
 int main()
 {
-    int mainStatus = -1,boardSelect ,counter = 0, player,moveSelect,result,status;
+    int mainStatus = -1,boardSelect ,counter = 0, player,status = 1;
     char mark;
+    printf("\n                   ////welcome to the ultimate tic tac toe game\\\\\\\n");
+    time_t t;   // not a primitive datatype
+    time(&t);
 
-    printf("Play Game with Bot Or User ? (Bot => 1 & User => 2)  :  ");
+    printf("\ndate and time : %s\n", ctime(&t)); //function which show the time and date
+
+    printf("exit : type '0'\n");
+    printf("Play Game with Bot Or User ? (Bot => 1 & User => 2)  :  "); //choose which type of the game do you want
     scanf("%d",&status);
 
-    while (mainStatus == -1)
+    while (status == 1)
     {
-        player = counter % 2 + 1;
-        if (player == 1)
+        while (mainStatus == -1)
         {
-            mark = 'X';
-        }
-        else
-        {
-            mark = 'O';
-        }
-
-        printf("Main Board \n");
-        board(mainboard);
-
-        if (player == 1)
-        {
-            printf("The turn of player number one (%c)\n",mark);
-        }
-        else
-        {
-            if (status == 1)
+            player = counter % 2 + 1; //swaping between X and O while each round ends
+            if (player == 1)
             {
-                printf("The turn of Bot :)\n");
+                mark = 'X';
             }
             else
             {
-                printf("The turn of player number two (%c)\n",mark);
+                mark = 'O';
             }
-        }
 
-        if(status == 1 && player == 2)
-        {
-            boardSelect = 0;
-        }
-        else
-        {
-            printf("Select Board Your Move =>  ");
-            scanf("%d",&boardSelect);
-        }
-        printf("\n");
+            printf("Main Board \n");
+            board(mainboard); //calling main board function
 
-
-        if (mainboard[boardSelect] == 'X' || mainboard[boardSelect] == 'O')
-        {
-            printf("You Cant Select Number");
-        }
-        else
-        {
-            if (status == 1 && player == 2)
+            if (player == 1) // print which user should play
             {
-                moveAi();
+                printf("The turn of player number one (%c)\n",mark);
             }
             else
             {
-                moveUser(boardSelect ,mark ,player);
+                if (status == 1) //in case you choice bot this is gonna print
+                {
+                    printf("The turn of Bot :)\n");
+                }
+                else
+                {
+                    printf("The turn of player number two (%c)\n",mark);
+                }
             }
+
+            if(status == 1 && player == 2)
+            {
+                boardSelect = 0;
+            }
+            else
+            {
+                printf("Select Board Your Move =>  "); // ask which square of the ult tic tac toe you want to play in
+                scanf("%d",&boardSelect);
+            }
+            printf("\n");
+
+
+            if (mainboard[boardSelect] == 'X' || mainboard[boardSelect] == 'O') // if user choice a full or invalid square program print this
+            {
+                printf("You Cant Select Number");
+            }
+            else
+            {
+                if (status == 1 && player == 2)
+                {
+                    moveAi(); //calling bot if you had been choose 1 vs AI version of the game
+                }
+                else
+                {
+                    moveUser(boardSelect ,mark ,player); // if you had been choice 1 vs 1 program will call this function
+                }
+            }
+            counter++;
+            mainStatus = checkwin(mainboard); //checking win rate after each move
         }
-        counter++;
-        mainStatus = checkwin(mainboard);
+
+        if (mainStatus == 1) //if return of the check win function was 1 program will show the winner
+        {
+            printf("player %d Win!!! \n",player);
+        }
+        else // other way program will show define
+        {
+            printf("Even !!");
+        }
+
+        printf("Do you want to play again ? (Send number 1 to continue)\n");
+        scanf("%d",&status);
+        if (status == 1)
+        {
+            mainStatus = -1;
+            reset();
+        }
+        else
+        {
+            printf("Bye. Hoping to play again !!\n");
+        }
     }
-    if (mainStatus == 1)
-    {
-        printf("player %d Win!!! \n",player);
-    }
-    else
-    {
-        printf("Even !!");
-    }
+
 
 }
 
 
-void moveAi()
+void moveAi() // function which maintaing ai moves by time.h
 {
-    int boardSelect,player = 2,status = 0,choice;
-    char mark = '@';
+    int boardSelect,status = 0,choice;
+    char mark = 'O';
 
     while (status == 0)
     {
         srand(clock());
-        boardSelect = rand() % 9 + 1;
+        boardSelect = rand() % 9 + 1; //generating random number between 1 and 10
 
-        if (mainboard[boardSelect] != '@' && mainboard[boardSelect] != 'X')
+        if (mainboard[boardSelect] != 'O' && mainboard[boardSelect] != 'X') //check the invalid or full rooms
         {
             status = 1;
         }
@@ -124,7 +149,7 @@ void moveAi()
     while (status == 0)
     {
         srand(clock());
-        choice = rand() % 9 + 1;
+        choice = rand() % 9 + 1; //generating random number for each house in the main function by using switch case
 
         switch (boardSelect)
         {
@@ -178,17 +203,17 @@ void moveAi()
     }
 }
 
-void moveUser(int boardSelect ,char mark ,int player)
+void moveUser(int boardSelect ,char mark ,int player) //function which track the users movement
 {
     int moveSelect,result;
 
 
     if (boardSelect == 1)
     {
-        printf("     Board 1\n\n");
+        printf("     Board 1\n\n"); //show which house you playing in
         board(part1);
 
-        if (player == 1)
+        if (player == 1)//show which player have to move
         {
             printf("The turn of player number one (%c)\n",mark);
         }
@@ -198,16 +223,16 @@ void moveUser(int boardSelect ,char mark ,int player)
         }
 
         printf("Select Number For Move =>  ");
-        scanf("%d",&moveSelect);
+        scanf("%d",&moveSelect);// scaning the room which player had been choose
         move(moveSelect, part1 ,mark);
 
-        printf("The move of the number %d player was done !!\n",player);
+        printf("The move of the number %d player was done !!\n",player); // just a text for know each player has done his own move
         board(part1);
         printf("-----------------------------------------------------\n\n");
 
-        result = checkwin(part1);
+        result = checkwin(part1); // check win after each move of the players
     }
-
+                               //the next 9 command will do the same previus explaintions
     else if (boardSelect == 2)
     {
         printf("     Board 2\n\n");
@@ -401,18 +426,18 @@ void moveUser(int boardSelect ,char mark ,int player)
         result = checkwin(part9);
     }
 
-    if (result == 1)
+    if (result == 1) //check the player's moves and win rate by check win again in the ultimate form of the game
     {
         move(boardSelect, mainboard ,mark);
     }
-    else if(result == 0)
+    else if(result == 0) //check if the game is tie or not
     {
         printf("Even !!");
         move(boardSelect ,mainboard ,'!');
     }
 }
 
-int move(int choice ,char square[10] ,char mark)
+int move(int choice ,char square[10] ,char mark) //swap numbers of the each colmun by the users marks X or O
 {
     if (choice == 1 && square[1] == '1')
     {
@@ -461,47 +486,47 @@ int move(int choice ,char square[10] ,char mark)
     }
     else
     {
-        printf("Invalid move ");
+        printf("Invalid move "); // print an error if the user had been chooice an invalid or full room
         return 0;
     }
 }
 
-int checkwin(char square[10])
+int checkwin(char square[10]) // check the win
 {
-    if (square[1] == square[2] && square[2] == square[3])
+    if (square[1] == square[2] && square[2] == square[3]) //check win in a row
         return 1;
 
-    else if (square[4] == square[5] && square[5] == square[6])
+    else if (square[4] == square[5] && square[5] == square[6])//check win in a row
         return 1;
 
-    else if (square[7] == square[8] && square[8] == square[9])
+    else if (square[7] == square[8] && square[8] == square[9])//check win in a row
         return 1;
 
-    else if (square[1] == square[4] && square[4] == square[7])
+    else if (square[1] == square[4] && square[4] == square[7])//check win in a column
         return 1;
 
-    else if (square[2] == square[5] && square[5] == square[8])
+    else if (square[2] == square[5] && square[5] == square[8])//check win in a column
         return 1;
 
-    else if (square[3] == square[6] && square[6] == square[9])
+    else if (square[3] == square[6] && square[6] == square[9])//check win in a column
         return 1;
 
-    else if (square[1] == square[5] && square[5] == square[9])
+    else if (square[1] == square[5] && square[5] == square[9])//check win in a diameter
         return 1;
 
-    else if (square[3] == square[5] && square[5] == square[7])
+    else if (square[3] == square[5] && square[5] == square[7])//check win in a diameter
         return 1;
 
     else if (square[1] != '1' && square[2] != '2' && square[3] != '3' &&
              square[4] != '4' && square[5] != '5' && square[6] != '6' && square[7]
-                                                                         != '7' && square[8] != '8' && square[9] != '9')
+                                                                         != '7' && square[8] != '8' && square[9] != '9') //in other case return the default varibles
 
         return 0;
-    else
+    else // return of this function is 0 or 1 so this line and the next command is to be sure that program work clearly
         return  - 1;
 }
 
-void board(char square[10])
+void board(char square[10]) // and the syntax graphical design for the rooms of the tic tac toe unfortunatly we could'nt afford true graphical and colorize form
 {
 
     // printf("Player 1 (X)  -  Player 2 (O)\n\n\n");
@@ -522,3 +547,32 @@ void board(char square[10])
 
     printf("     |     |     \n\n");
 }
+
+void reset()
+{
+    change(mainboard);
+    change(part1);
+    change(part2);
+    change(part3);
+    change(part4);
+    change(part5);
+    change(part6);
+    change(part7);
+    change(part8);
+    change(part9);
+}
+
+void change(char board[10])
+{
+    board[0] = '0';
+    board[1] = '1';
+    board[2] = '2';
+    board[3] = '3';
+    board[4] = '4';
+    board[5] = '5';
+    board[6] = '6';
+    board[7] = '7';
+    board[8] = '8';
+    board[9] = '9';
+}
+
