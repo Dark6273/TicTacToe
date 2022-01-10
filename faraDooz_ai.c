@@ -1,3 +1,8 @@
+//the faradooz project
+// created by mahdi khosravi & amir hossein sabry & ehsan alami
+
+
+//library of project
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -548,7 +553,8 @@ void board(char square[10]) // and the syntax graphical design for the rooms of 
     printf("     |     |     \n\n");
 }
 
-void reset()
+
+void reset()  // reset board
 {
     change(mainboard);
     change(part1);
@@ -562,7 +568,7 @@ void reset()
     change(part9);
 }
 
-void change(char board[10])
+void change(char board[10]) // reset board
 {
     board[0] = '0';
     board[1] = '1';
@@ -575,4 +581,3 @@ void change(char board[10])
     board[8] = '8';
     board[9] = '9';
 }
-

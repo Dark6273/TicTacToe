@@ -22,6 +22,7 @@ void reset();
 int main()
 {
     int player = 1, i,status,state = 1,win1 = 0,win2 = 0;
+    time_t start,end;
 
     printf("Play Game with Bot Or User ? (Bot => 1 & User => 2)  :  ");
     scanf("%d",&status);
@@ -48,7 +49,6 @@ int main()
             {
                 user(player);
             }
-
             i = checkwin();
 
             player++;
@@ -130,7 +130,9 @@ int checkwin()//this function check to see the anyone win or no
 }
 void board()//this function show the game map
 {
-
+    //clear board
+    printf("%c[H", 27);
+	printf("%c[2J", 27);
     printf("Player 1 (X)  -  Player 2 (O)\n\n\n");
 
     //show row and column 
