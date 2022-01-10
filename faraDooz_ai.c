@@ -31,7 +31,7 @@ void change(char board[10]);
 
 int main()
 {
-    int mainStatus = -1,boardSelect ,counter = 0, player,status = 1;
+    int mainStatus = -1,boardSelect ,counter = 0, player,status = 1,state = 1;
     char mark;
     printf("\n                   ////welcome to the ultimate tic tac toe game\\\\\\\n");
     time_t t;   // not a primitive datatype
@@ -43,7 +43,7 @@ int main()
     printf("Play Game with Bot Or User ? (Bot => 1 & User => 2)  :  "); //choose which type of the game do you want
     scanf("%d",&status);
 
-    while (status == 1)
+    while (state == 1)
     {
         while (mainStatus == -1)
         {
@@ -117,8 +117,8 @@ int main()
         }
 
         printf("Do you want to play again ? (Send number 1 to continue)\n");
-        scanf("%d",&status);
-        if (status == 1)
+        scanf("%d",&state);
+        if (state == 1)
         {
             mainStatus = -1;
             reset();
